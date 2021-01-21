@@ -1,8 +1,19 @@
-# Sentinel 控制台
+# Sentinel 控制台 For Nacos
 
 ## 0. 概述
 
-Sentinel 控制台是流量控制、熔断降级规则统一配置和管理的入口，它为用户提供了机器自发现、簇点链路自发现、监控、规则配置等功能。在 Sentinel 控制台上，我们可以配置规则并实时查看流量控制效果。
+Sentinel 控制台改写，开放流控界面的`回到集群页面`按钮，集群页面集成 nacos 配置。相关 nacos 配置可在配置文件中更改，默认为`127.0.0.1:8848`，配置文件默认为`应用名-flow-rules`，配置格式为 json。  
+相关服务也需配置 nacos 数据源，例如：
+```java
+spring.cloud.sentinel.datasource.ds1.nacos.server-addr=localhost:8848
+spring.cloud.sentinel.datasource.ds1.nacos.data-id=${spring.application.name}-flow-rules
+spring.cloud.sentinel.datasource.ds1.nacos.group-id=DEFAULT_GROUP
+spring.cloud.sentinel.datasource.ds1.nacos.data-type=json
+spring.cloud.sentinel.datasource.ds1.nacos.rule-type=flow
+```  
+大致流程可以理解为，Dashboard 更改流控配置-推送到 nacos 存储-nacos感知配置变更-通知具体服务更新。  
+目前只集成了流控规则，其他规则暂未集成到 nacos，依旧是走本地缓存。
+
 
 ## 1. 编译和启动
 
